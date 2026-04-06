@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">`r`n    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>مدونة صحة | الموسوعة الطبية المتكاملة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- شريط الإشعارات العلوي -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="breaking-news">
+                <i class="fas fa-bell"></i>
+                <span>آخر الأخبار الطبية:</span>
+                <marquee behavior="scroll" direction="right" scrollamount="2">اكتشاف علاج جديد لمرض السكري من النوع الثاني - منظمة الصحة العالمية تعلن عن إرشادات غذائية جديدة لعام 2025</marquee>
+            </div>
+            <div class="theme-switch">
+                <span class="theme-label">الوضع:</span>
+                <i class="fas fa-moon"></i>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider round"></span>
+                </label>
+                <i class="fas fa-sun"></i>
+                <span class="theme-state" id="theme-state-label">نهاري</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- الهيدر المتطور (ثابت مع تأثير زجاجي) -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <div class="logo-text">
+                    <span class="logo-title">مدونة صحة</span>
+                    <span class="logo-subtitle">الموسوعة الطبية</span>
+                </div>
+            </div>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="ابحث عن مرض، علاج، أو نصيحة طبية...">
+            </div>
+            
+            <div class="header-actions">
+                <div class="mobile-menu-btn" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <div class="container">
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="active">الرئيسية</a></li>
+                    <li><a href="heart-diseases.html">أمراض القلب</a></li>
+                    <li><a href="diabetes.html">السكري</a></li>
+                    <li><a href="nutrition.html">التغذية</a></li>
+                    <li><a href="supplements.html">المكملات</a></li>
+                    <li><a href="fitness.html">اللياقة</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- شريط تقدم القراءة -->
+        <div class="progress-container">
+            <div class="progress-bar" id="readingProgressBar"></div>
+        </div>
+    </header>
+
+    <!-- القائمة الجانبية للجوال (Sidebar) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>مدونة صحة</span>
+            </div>
+            <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html" class="active"><i class="fas fa-home"></i> الرئيسية</a></li>
+            <li class="sidebar-dropdown">
+                <a href="#"><i class="fas fa-heart"></i> أمراض القلب <i class="fas fa-chevron-left"></i></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="heart-diseases.html">تصلب الشرايين</a></li>
+                    <li><a href="heart-diseases.html">ارتفاع الضغط</a></li>
+                    <li><a href="heart-diseases.html">اضطراب النبض</a></li>
+                </ul>
+            </li>
+            <li class="sidebar-dropdown">
+                <a href="#"><i class="fas fa-tint"></i> السكري <i class="fas fa-chevron-left"></i></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="diabetes.html">النوع الأول</a></li>
+                    <li><a href="diabetes.html">النوع الثاني</a></li>
+                    <li><a href="diabetes.html">سكري الحمل</a></li>
+                </ul>
+            </li>
+            <li><a href="nutrition.html"><i class="fas fa-apple-alt"></i> التغذية العلاجية</a></li>
+            <li><a href="supplements.html"><i class="fas fa-capsules"></i> المكملات الغذائية</a></li>
+            <li><a href="fitness.html"><i class="fas fa-dumbbell"></i> اللياقة البدنية</a></li>
+        </ul>
+    </div>
+
+    <!-- أيقونات التواصل الاجتماعي العائمة -->
+    <div class="floating-social-buttons">
+        <a href="https://wa.me/967738355723" class="social-float whatsapp" target="_blank" rel="noopener noreferrer" aria-label="تواصل واتساب">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <!-- البطل الرئيسي -->
+    <section class="hero-slider">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="typing-title">موسوعتك الطبية <span class="highlight">المتكاملة</span></h1>
+                <p id="typed-text"></p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number" data-target="150">0</div>
+                        <div class="stat-label">مقال طبي</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" data-target="25">0</div>
+                        <div class="stat-label">استشاري معتمد</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" data-target="50000">0</div>
+                        <div class="stat-label">مستفيد شهرياً</div>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                    <a href="#featured-articles" class="btn-primary">استكشف الموسوعة <i class="fas fa-arrow-left"></i></a>
+                    <a href="#" class="btn-secondary" id="emergencyGuide">دليل الإسعافات <i class="fas fa-book-medical"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الأقسام السريعة -->
+    <section class="quick-categories">
+        <div class="container">
+            <div class="section-header">
+                <h2>تصفح حسب التخصص</h2>
+                <p>أقسام طبية متخصصة تغطي جميع احتياجاتك الصحية</p>
+            </div>
+            <div class="categories-grid">
+                <div class="category-card" data-category="heart">
+                    <i class="fas fa-heartbeat"></i>
+                    <h3>أمراض القلب</h3>
+                    <p>ارتفاع الضغط، تصلب الشرايين</p>
+                    <div class="card-hover-effect"></div>
+                </div>
+                <div class="category-card" data-category="diabetes">
+                    <i class="fas fa-tint"></i>
+                    <h3>مرض السكري</h3>
+                    <p>النوع الأول والثاني، سكري الحمل</p>
+                    <div class="card-hover-effect"></div>
+                </div>
+                <div class="category-card" data-category="nutrition">
+                    <i class="fas fa-leaf"></i>
+                    <h3>التغذية العلاجية</h3>
+                    <p>أنظمة غذائية، فيتامينات ومعادن</p>
+                    <div class="card-hover-effect"></div>
+                </div>
+                <div class="category-card" data-category="fitness">
+                    <i class="fas fa-dumbbell"></i>
+                    <h3>اللياقة البدنية</h3>
+                    <p>تمارين، حرق دهون، بناء عضلات</p>
+                    <div class="card-hover-effect"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- المقالات المميزة -->
+    <section class="featured-articles" id="featured-articles">
+        <div class="container">
+            <div class="section-header">
+                <h2>أحدث المقالات الطبية</h2>
+                <p>محتوى محدث بأحدث التوصيات العالمية</p>
+            </div>
+            <div class="articles-grid" id="articlesGrid">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- النشرة البريدية -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <i class="fas fa-envelope-open-text"></i>
+                <h2>اشترك في نشرتنا البريدية</h2>
+                <p>احصل على أحدث المقالات والنصائح الطبية مباشرة إلى بريدك الإلكتروني</p>
+                <form id="newsletterForm">
+                    <input type="email" placeholder="بريدك الإلكتروني" required>
+                    <button type="submit">اشترك الآن <i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر المبسط -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-simple">
+                <div class="footer-logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>مدونة صحة</span>
+                </div>
+                <p>موسوعة طبية عربية تهدف لنشر الوعي الصحي وتقديم معلومات دقيقة وموثوقة.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+                <div class="footer-bottom">
+                    <p>�� ������ ������ ��� ���� ������</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- مودال المقال السريع -->
+    <div class="modal" id="quickModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- مودال دليل الإسعافات -->
+    <div class="modal" id="emergencyModal">
+        <div class="modal-content emergency-modal">
+            <span class="modal-close">&times;</span>
+            <h2><i class="fas fa-hand-holding-heart"></i> دليل الإسعافات الأولية السريع</h2>
+            <div class="emergency-guide">
+                <div class="emergency-item">
+                    <i class="fas fa-heart-broken"></i>
+                    <h3>النوبة القلبية</h3>
+                    <p>اتصل بالإسعاف فوراً، اجعل المصاب يجلس، أعطه أسبرين إذا لم يكن لديه حساسية</p>
+                </div>
+                <div class="emergency-item">
+                    <i class="fas fa-lungs"></i>
+                    <h3>ضيق التنفس</h3>
+                    <p>اجلس المصاب بوضعية مريحة، افتح النوافذ، استخدم بخاخ الربو إن وجد</p>
+                </div>
+                <div class="emergency-item">
+                    <i class="fas fa-brain"></i>
+                    <h3>السكتة الدماغية</h3>
+                    <p>تذكر FAST: الوجه، الذراع، الكلام، الوقت. اتصل بالإسعاف فوراً</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- زر العودة للأعلى -->
+    <button id="backToTop" class="back-to-top"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
