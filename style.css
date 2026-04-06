@@ -533,6 +533,16 @@ input:checked + .slider:before {
     right: 0;
     bottom: 0;
     background: radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.2), rgba(0,0,0,0.65));
+    z-index: 0;
+}
+
+.hero-particles {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
 }
 
 .hero-content {
@@ -787,6 +797,7 @@ input:checked + .slider:before {
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(14, 116, 144, 0.22);
+    transform-style: preserve-3d;
 }
 
 [data-theme="dark"] .category-card,
@@ -881,6 +892,7 @@ input:checked + .slider:before {
     box-shadow: var(--shadow-sm);
     border: 1px solid rgba(14, 116, 144, 0.15);
     position: relative;
+    transform-style: preserve-3d;
 }
 
 .article-card:hover {
@@ -897,6 +909,23 @@ input:checked + .slider:before {
     justify-content: center;
     font-size: 48px;
     color: var(--secondary-color);
+}
+
+.dynamic-article-icon {
+    animation: iconPulse 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 6px 10px rgba(14, 116, 144, 0.25));
+}
+
+.card-ripple {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: rgba(34, 211, 238, 0.35);
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: none;
+    z-index: 3;
+    animation: rippleBurst 0.5s ease-out forwards;
 }
 
 .article-content {
@@ -1171,6 +1200,22 @@ input:checked + .slider:before {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+}
+
+@keyframes rippleBurst {
+    0% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(12);
+    }
 }
 
 @keyframes fadeInUp {
@@ -1584,4 +1629,149 @@ body.has-sticky-header {
     .hero-buttons a {
         width: min(320px, 100%);
     }
+}
+
+/* ========== Ultra Interactions ========== */
+:root {
+    --pointer-x: 50vw;
+    --pointer-y: 50vh;
+    --hero-shift-x: 0px;
+    --hero-shift-y: 0px;
+}
+
+body.interactive-aura::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(320px circle at var(--pointer-x) var(--pointer-y), rgba(34, 211, 238, 0.12), transparent 62%);
+    transition: background 0.2s linear;
+}
+
+.hero-orbs {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 999px;
+    opacity: 0.36;
+    filter: blur(2px);
+    transform: translate(var(--hero-shift-x), var(--hero-shift-y));
+    transition: transform 0.2s ease-out;
+}
+
+.orb-1 {
+    width: 250px;
+    height: 250px;
+    top: 12%;
+    right: 8%;
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.38), transparent 70%);
+    animation: orbFloat1 7s ease-in-out infinite;
+}
+
+.orb-2 {
+    width: 200px;
+    height: 200px;
+    bottom: 10%;
+    left: 12%;
+    background: radial-gradient(circle, rgba(14, 116, 144, 0.35), transparent 72%);
+    animation: orbFloat2 8s ease-in-out infinite;
+}
+
+.orb-3 {
+    width: 140px;
+    height: 140px;
+    top: 42%;
+    left: 48%;
+    background: radial-gradient(circle, rgba(103, 232, 249, 0.32), transparent 70%);
+    animation: orbFloat3 6.5s ease-in-out infinite;
+}
+
+.category-card:hover i,
+.article-card:hover .dynamic-article-icon {
+    animation-duration: 0.8s;
+}
+
+.reveal-block {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+}
+
+.reveal-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: transform 0.65s ease, opacity 0.65s ease;
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
+@keyframes orbFloat1 {
+    0%, 100% { transform: translate(var(--hero-shift-x), var(--hero-shift-y)) translateY(0); }
+    50% { transform: translate(var(--hero-shift-x), var(--hero-shift-y)) translateY(-20px) translateX(-8px); }
+}
+
+@keyframes orbFloat2 {
+    0%, 100% { transform: translate(var(--hero-shift-x), var(--hero-shift-y)) translateX(0); }
+    50% { transform: translate(var(--hero-shift-x), var(--hero-shift-y)) translateX(20px) translateY(-12px); }
+}
+
+@keyframes orbFloat3 {
+    0%, 100% { transform: translate(var(--hero-shift-x), var(--hero-shift-y)) scale(1); }
+    50% { transform: translate(var(--hero-shift-x), var(--hero-shift-y)) scale(1.14); }
+}
+
+@media (max-width: 768px) {
+    .orb-1 {
+        width: 180px;
+        height: 180px;
+    }
+
+    .orb-2 {
+        width: 150px;
+        height: 150px;
+    }
+
+    .orb-3 {
+        width: 110px;
+        height: 110px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    body.interactive-aura::before {
+        display: none;
+    }
+
+    .hero-particles {
+        display: none;
+    }
+}
+
+/* ========== Page Transition ========== */
+.page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: linear-gradient(135deg, #020617, #0f172a);
+    transform: scaleX(1);
+    transform-origin: right center;
+    transition: transform 0.34s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.page-transition.entered {
+    transform: scaleX(0);
+}
+
+.page-transition.exiting {
+    transform: scaleX(1);
 }

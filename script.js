@@ -161,6 +161,21 @@ function getCategoryTitle(category) {
     return 'صحة عامة';
 }
 
+function getArticleIcon(article) {
+    const iconsByCategory = {
+        heart: ['fa-heartbeat', 'fa-stethoscope', 'fa-heart'],
+        diabetes: ['fa-tint', 'fa-syringe', 'fa-vial'],
+        nutrition: ['fa-apple-alt', 'fa-leaf', 'fa-seedling'],
+        fitness: ['fa-dumbbell', 'fa-fire', 'fa-heartbeat'],
+        supplements: ['fa-capsules', 'fa-pills', 'fa-prescription-bottle-alt']
+    };
+
+    const fallback = ['fa-notes-medical', 'fa-heartbeat', 'fa-stethoscope'];
+    const pool = iconsByCategory[article.category] || fallback;
+    const idValue = (article.id || '').split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+    return pool[idValue % pool.length];
+}
+
 function loadCategoryArticles(category) {
     const grid = document.querySelector('.articles-grid, .diseases-list');
     if (!grid) return;
@@ -177,10 +192,11 @@ function displayArticles(container, articles) {
     
     let html = '';
     articles.forEach((article, index) => {
+        const dynamicIcon = getArticleIcon(article);
         html += `
             <div class="article-card" data-id="${article.id}" style="animation-delay: ${index * 0.1}s">
                 <div class="article-image">
-                    <i class="fas fa-book-medical"></i>
+                    <i class="fas ${dynamicIcon} dynamic-article-icon"></i>
                 </div>
                 <div class="article-content">
                     <span class="article-category">${getCategoryTitle(article.category)}</span>
@@ -320,19 +336,27 @@ function initAnimatedStats() {
 
 function animateStats() {
     const stats = document.querySelectorAll('.stat-number');
+    const duration = 1400;
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
     stats.forEach(stat => {
-        const target = parseInt(stat.getAttribute('data-target'));
-        let current = 0;
-        const increment = target / 50;
-        const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-                stat.textContent = target.toLocaleString();
-                clearInterval(timer);
-            } else {
-                stat.textContent = Math.floor(current).toLocaleString();
+        const target = parseInt(stat.getAttribute('data-target'), 10);
+        if (Number.isNaN(target)) return;
+        const start = performance.now();
+
+        const tick = (now) => {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = easeOutCubic(progress);
+            const value = Math.round(target * eased);
+            stat.textContent = value.toLocaleString();
+
+            if (progress < 1) {
+                requestAnimationFrame(tick);
             }
-        }, 25);
+        };
+
+        requestAnimationFrame(tick);
     });
 }
 
@@ -660,8 +684,246 @@ function initCategoryNavigation() {
     });
 }
 
+function initAdvancedCardInteractions() {
+    const interactiveCards = document.querySelectorAll('.category-card, .article-card');
+
+    interactiveCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const rotateY = ((x / rect.width) - 0.5) * 10;
+            const rotateX = ((y / rect.height) - 0.5) * -10;
+            card.style.transform = `translateY(-8px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+
+        card.addEventListener('click', (e) => {
+            const ripple = document.createElement('span');
+            ripple.className = 'card-ripple';
+            const rect = card.getBoundingClientRect();
+            ripple.style.left = `${e.clientX - rect.left}px`;
+            ripple.style.top = `${e.clientY - rect.top}px`;
+            card.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 500);
+        });
+    });
+}
+
+function initPointerAura() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    document.body.classList.add('interactive-aura');
+    window.addEventListener('pointermove', (e) => {
+        document.documentElement.style.setProperty('--pointer-x', `${e.clientX}px`);
+        document.documentElement.style.setProperty('--pointer-y', `${e.clientY}px`);
+    });
+}
+
+function initMagneticButtons() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const magneticTargets = document.querySelectorAll('.btn-primary, .btn-secondary, .social-float, .mobile-menu-btn');
+    magneticTargets.forEach((el) => {
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            el.style.transform = `translate(${x * 0.14}px, ${y * 0.14}px)`;
+        });
+
+        el.addEventListener('mouseleave', () => {
+            el.style.transform = '';
+        });
+    });
+}
+
+function initHeroEffects() {
+    const hero = document.querySelector('.hero-slider');
+    if (!hero) return;
+
+    if (!hero.querySelector('.hero-orbs')) {
+        const orbWrap = document.createElement('div');
+        orbWrap.className = 'hero-orbs';
+        orbWrap.innerHTML = `
+            <span class="orb orb-1"></span>
+            <span class="orb orb-2"></span>
+            <span class="orb orb-3"></span>
+        `;
+        hero.appendChild(orbWrap);
+    }
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    window.addEventListener('mousemove', (e) => {
+        const rect = hero.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const offsetX = (e.clientX - centerX) / rect.width;
+        const offsetY = (e.clientY - centerY) / rect.height;
+        hero.style.setProperty('--hero-shift-x', `${offsetX * 22}px`);
+        hero.style.setProperty('--hero-shift-y', `${offsetY * 18}px`);
+    });
+}
+
+function initEnhancedSectionReveal() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const revealTargets = document.querySelectorAll('.section-header, .hero-stats .stat, .newsletter-content, .footer-simple');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal-active');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    revealTargets.forEach((target, idx) => {
+        target.style.setProperty('--reveal-delay', `${idx * 60}ms`);
+        target.classList.add('reveal-block');
+        observer.observe(target);
+    });
+}
+
+function initPageTransitions() {
+    let overlay = document.querySelector('.page-transition');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'page-transition';
+        document.body.appendChild(overlay);
+    }
+
+    requestAnimationFrame(() => {
+        overlay.classList.add('entered');
+    });
+
+    const isSameOriginHtmlLink = (anchor) => {
+        const href = anchor.getAttribute('href') || '';
+        if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) return false;
+        if (anchor.target === '_blank' || anchor.hasAttribute('download')) return false;
+        const url = new URL(anchor.href, window.location.href);
+        return url.origin === window.location.origin;
+    };
+
+    document.querySelectorAll('a[href]').forEach((anchor) => {
+        if (!isSameOriginHtmlLink(anchor)) return;
+
+        anchor.addEventListener('click', (e) => {
+            if (e.defaultPrevented) return;
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+            const url = new URL(anchor.href, window.location.href);
+            if (url.href === window.location.href) return;
+
+            e.preventDefault();
+            overlay.classList.remove('entered');
+            overlay.classList.add('exiting');
+            setTimeout(() => {
+                window.location.href = url.href;
+            }, 340);
+        });
+    });
+}
+
+function initHeroParticles() {
+    const hero = document.querySelector('.hero-slider');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!hero || prefersReducedMotion) return;
+
+    let canvas = hero.querySelector('.hero-particles');
+    if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.className = 'hero-particles';
+        hero.appendChild(canvas);
+    }
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const state = {
+        particles: [],
+        width: 0,
+        height: 0,
+        frame: 0
+    };
+
+    const createParticles = () => {
+        const count = window.innerWidth < 768 ? 14 : 26;
+        state.particles = Array.from({ length: count }, () => ({
+            x: Math.random() * state.width,
+            y: Math.random() * state.height,
+            vx: (Math.random() - 0.5) * 0.35,
+            vy: (Math.random() - 0.5) * 0.35,
+            r: Math.random() * 2.2 + 0.8
+        }));
+    };
+
+    const resize = () => {
+        const rect = hero.getBoundingClientRect();
+        state.width = Math.max(1, Math.floor(rect.width));
+        state.height = Math.max(1, Math.floor(rect.height));
+        canvas.width = state.width;
+        canvas.height = state.height;
+        createParticles();
+    };
+
+    const draw = () => {
+        state.frame = requestAnimationFrame(draw);
+        ctx.clearRect(0, 0, state.width, state.height);
+
+        for (let i = 0; i < state.particles.length; i++) {
+            const p = state.particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.x < 0 || p.x > state.width) p.vx *= -1;
+            if (p.y < 0 || p.y > state.height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(103, 232, 249, 0.45)';
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+
+            for (let j = i + 1; j < state.particles.length; j++) {
+                const q = state.particles[j];
+                const dx = p.x - q.x;
+                const dy = p.y - q.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist < 120) {
+                    ctx.strokeStyle = `rgba(34, 211, 238, ${0.18 * (1 - dist / 120)})`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(q.x, q.y);
+                    ctx.stroke();
+                }
+            }
+        }
+    };
+
+    resize();
+    draw();
+    window.addEventListener('resize', resize);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            cancelAnimationFrame(state.frame);
+        } else {
+            draw();
+        }
+    });
+}
+
 // تنفيذ جميع الوظائف
 document.addEventListener('DOMContentLoaded', () => {
+    initPageTransitions();
     initHeaderLayout();
     loadPageArticles();
     loadArticlePage();
@@ -679,6 +941,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initTextReveal();
     initCardReveal();
     initCategoryNavigation();
+    initAdvancedCardInteractions();
+    initPointerAura();
+    initMagneticButtons();
+    initHeroEffects();
+    initEnhancedSectionReveal();
+    initHeroParticles();
     
     // إشعار ترحيبي
     setTimeout(() => {
