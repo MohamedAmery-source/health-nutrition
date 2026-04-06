@@ -865,6 +865,13 @@ input:checked + .slider:before {
     gap: 25px;
 }
 
+.diseases-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 12px;
+}
+
 .article-card {
     background: var(--white);
     border-radius: var(--border-radius);
@@ -1293,6 +1300,11 @@ input:checked + .slider:before {
     .articles-grid {
         grid-template-columns: 1fr;
         gap: 20px;
+    }
+
+    .diseases-list {
+        grid-template-columns: 1fr;
+        gap: 18px;
     }
     
     .newsletter-content h2 {
