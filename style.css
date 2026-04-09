@@ -1755,23 +1755,3 @@ body.interactive-aura::before {
         display: none;
     }
 }
-
-/* ========== Page Transition ========== */
-.page-transition {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    pointer-events: none;
-    background: linear-gradient(135deg, #020617, #0f172a);
-    transform: scaleX(1);
-    transform-origin: right center;
-    transition: transform 0.34s cubic-bezier(0.77, 0, 0.175, 1);
-}
-
-.page-transition.entered {
-    transform: scaleX(0);
-}
-
-.page-transition.exiting {
-    transform: scaleX(1);
-}

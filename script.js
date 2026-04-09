@@ -794,46 +794,6 @@ function initEnhancedSectionReveal() {
     });
 }
 
-function initPageTransitions() {
-    let overlay = document.querySelector('.page-transition');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.className = 'page-transition';
-        document.body.appendChild(overlay);
-    }
-
-    requestAnimationFrame(() => {
-        overlay.classList.add('entered');
-    });
-
-    const isSameOriginHtmlLink = (anchor) => {
-        const href = anchor.getAttribute('href') || '';
-        if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) return false;
-        if (anchor.target === '_blank' || anchor.hasAttribute('download')) return false;
-        const url = new URL(anchor.href, window.location.href);
-        return url.origin === window.location.origin;
-    };
-
-    document.querySelectorAll('a[href]').forEach((anchor) => {
-        if (!isSameOriginHtmlLink(anchor)) return;
-
-        anchor.addEventListener('click', (e) => {
-            if (e.defaultPrevented) return;
-            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-
-            const url = new URL(anchor.href, window.location.href);
-            if (url.href === window.location.href) return;
-
-            e.preventDefault();
-            overlay.classList.remove('entered');
-            overlay.classList.add('exiting');
-            setTimeout(() => {
-                window.location.href = url.href;
-            }, 340);
-        });
-    });
-}
-
 function initHeroParticles() {
     const hero = document.querySelector('.hero-slider');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -923,10 +883,12 @@ function initHeroParticles() {
 
 // تنفيذ جميع الوظائف
 document.addEventListener('DOMContentLoaded', () => {
-    initPageTransitions();
+    const isServerRendered = document.body && document.body.dataset && document.body.dataset.serverRendered === 'true';
     initHeaderLayout();
-    loadPageArticles();
-    loadArticlePage();
+    if (!isServerRendered) {
+        loadPageArticles();
+        loadArticlePage();
+    }
     initAnimatedStats();
     initTheme();
     initMobileNav();
